@@ -1,38 +1,105 @@
-import React, { FC, useState, useEffect, ReactElement } from "react";
+import React, { FC, useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import { ROUTES_PATH } from "@constants/config";
 import useTranslation from "next-translate/useTranslation";
 import setLanguage from "next-translate/setLanguage";
-import { Box, Container, Typography, Button, List, ListItem, ListItemText } from "@material-ui/core";
+import { 
+    Box, 
+    Container, 
+    Typography, 
+    Button, 
+    Grid, 
+    Card, 
+    CardContent, 
+    Select, 
+    MenuItem ,
+    makeStyles, 
+    withStyles,
+    InputBase,
+} from "@material-ui/core";
+import { Pagination } from "@material-ui/lab";
 import api from "@utils/api";
 // import Layout from "../../src/components/layouts/layout";
-import TopNavbar from "../../src/components/layouts/TopNavbar";
-import Navbar from "../../src/components/layouts/Navbar";
+import TopNavbar from "@components/layouts/TopNavbar";
+import Navbar from "@components/layouts/Navbar";
+import { firstWordsToUpperCase } from "@helpers/stringFunctions";
+
+const SelectInput = withStyles((theme) => ({
+    input: {
+      borderRadius: 8,
+      position: 'relative',
+    //   backgroundColor: theme.palette.background.paper,
+      border: '2px solid #fff',
+      fontSize: 20,
+      fontWeight: 700,
+      padding: '8px 14px',
+      color: '#fff',
+      transition: theme.transitions.create(['border-color', 'box-shadow']),
+      '&:focus': {
+        borderRadius: 8,
+        background: '#fff',
+        color: '#E6AB09',
+        // borderColor: '#80bdff',
+        // boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
+      },
+    },
+  }))(InputBase);
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        '& .MuiPaginationItem-rounded': {
+            border: '2px solid #fff',
+            borderRadius: '8px',
+            fontSize: '20px',
+            fontWeight: 700,
+            color: '#fff',
+        },
+        '& .MuiPaginationItem-page.Mui-selected': {
+            background: '#fff',
+            color: '#E6AB09',
+        }
+    },
+    msFontSize: {
+        fontSize: "32px",
+        textAlign: "left",
+        [theme.breakpoints.up(600)]: {
+            fontSize: "52px"
+        }
+    }
+  }));
+
+const paginationInit = {
+    count: 0,
+    next: '',
+    previous: '',
+};
 
 const PokemonList: FC = () => {
     const [data, setData] = useState(null);
-    const [pagination, setPagination] = useState(null);
+    const [pagination, setPagination] = useState(paginationInit);
     const [isLoading, setLoading] = useState(false);
+    const [page, setPage] = useState(1);
+    const [perPage, setPerPage] = useState(9);
 
     const { t } = useTranslation();
     const route = useRouter();
     const { locale } = route;
     // setLanguage(locale);
+    const pokeList = useRef(null);
+    const classes = useStyles();
+    
+    // useEffect(() => {
+    //     fetchData();
+    // }, []);
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [page, perPage]);
 
-    const fetchParam = (action) => {
-        let param = 'limit=9&offset=0';
-        if (action === 'prev') {
-            param = pagination && pagination.previous ? pagination.previous : param;
-        }
-        if (action ===  'next') {
-            param = pagination && pagination.next ? pagination.next : param;
-        }
-        const index = param.indexOf('?');
-        param = index === -1 ? param : param.slice(index + 1);
+    const fetchParam = () => {
+        const offset = (page - 1) * perPage;
+        const param = `offset=${offset}&limit=${perPage}`;
+
         return param;
     };
 
@@ -41,7 +108,7 @@ const PokemonList: FC = () => {
 
         const URL = {
             baseURL: "https://pokeapi.co/api/v2/",
-            path: `pokemon/?${fetchParam(action)}`,
+            path: `pokemon/?${fetchParam()}`,
         };
         const res = (await api(URL.baseURL)).get(URL.path);
         const resData = (await res).data;
@@ -65,9 +132,20 @@ const PokemonList: FC = () => {
             const pokemon = { ...arrResults[i], ...resData };
             results.push(pokemon);
         }
+        console.log('results: ', results);
         setData(results);
         setLoading(false);
     };
+
+    const handlePageChange = (e, p) => {
+        setPage(p, );
+    };
+
+    const handlePerPageChange = (event) => {
+        setPerPage(event.target.value);
+    };
+
+    const scrollToPokeList = () => pokeList.current.scrollIntoView({ behavior: 'smooth' });
 
     return (
         <Container maxWidth="xl" style={{ backgroundColor: '#FAFAFA', padding: 0, height: '100%' }}>
@@ -75,21 +153,264 @@ const PokemonList: FC = () => {
             <Navbar />
             <Box component="div" style={{ backgroundColor: '#FFF', height: '100%' }}>
                 <Box component="div" pl={10} pr={10} style={{ height: `calc(100% - 100px)` }}>
-                    <Typography>List Pokemon</Typography>
+                    <Grid container style={{ height: '100%' }}>
+                        <Grid item xs={12} sm={6} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <Box component="div">
+                                <Typography
+                                    align="center"
+                                    variant="h4"
+                                    component="h3"
+                                    className={classes.msFontSize}
+                                    // style={{ fontSize: '52px', fontWeight: '700', lineHeight: '70px', color: '#42494D', padding: '0 32px 0 0', textAlign: 'left' }}
+                                >
+                                    {`All the Pokémon data you'll ever need in one place!`}
+                                </Typography>
+                                <Typography
+                                    align="center"
+                                    variant="h6"
+                                    component="h6"
+                                    style={{ fontSize: '20px', fontWeight: '400', lineHeight: '30px', color: '#7B8082', textAlign: 'left', marginTop: '32px' }}
+                                >
+                                    {`Thousands of data compiled into one place`}
+                                </Typography>
+                                <Box component="div" textAlign={"left"} mt={4}>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        disableRipple
+                                        style={{ 
+                                            borderRadius: '14px', 
+                                            padding: '16px 32px', 
+                                            background: '#E6AB09', 
+                                            fontSize: '20px', 
+                                            fontWeight: '700', 
+                                            lineHeight: '30px', 
+                                            color: '#fff',
+                                            textTransform: 'none',
+                                        }}
+                                        onClick={scrollToPokeList}
+                                    >
+                                        Check PokèDex
+                                    </Button>
+                                </Box>
+                            </Box>
+                        </Grid>
+                        <Grid item xs={12} sm={6} style={{ alignItems: 'center', justifyContent: 'center' }}>
+                            <Box component="div" position={"relative"} height={"100%"}>
+                                <Box component="div" position={"absolute"} top={"12%"} left={"4%"} zIndex={1}>
+                                    <img src="/images/poke1_home.png" style={{ width: '100%', height: 'auto' }} />
+                                </Box>
+                                <Box component="div" position={"absolute"} top={"24%"} left={"20%"} zIndex={2}>
+                                    <img src="/images/poke2_home.png" style={{ width: '100%', height: 'auto' }} />
+                                </Box>
+                                <Box component="div" position={"absolute"} top={"40%"} left={"32%"} zIndex={3}>
+                                    <img src="/images/poke3_home.png" style={{ width: '100%', height: 'auto' }} />
+                                </Box>
+                            </Box>
+                        </Grid>
+                    </Grid>
                 </Box>
-                <Box component="div" pl={10} pr={10}>
-                    <List>
+                <Box 
+                    component="div" 
+                    pl={10} pr={10} 
+                    ref={pokeList}
+                    style={{ 
+                        backgroundImage: 'url(/images/background_content.png)', 
+                        backgroundSize: 'cover', 
+                        border: '1px solid transparent' 
+                    }}
+                >
+                     <Typography 
+                        variant="h2" 
+                        style={{ 
+                            fontSize: '40px', 
+                            fontWeight: '700', 
+                            lineHeight: '60px', 
+                            color: '#42494D', 
+                            textAlign: 'center',
+                            marginTop: '80px',
+                            marginBottom: '16px',
+                        }}
+                    >
+                        PokèDex
+                    </Typography>
+                    <Typography 
+                        variant="h2" 
+                        style={{ 
+                            fontSize: '24px', 
+                            fontWeight: '300', 
+                            lineHeight: '36px', 
+                            color: '#42494D;', 
+                            textAlign: 'center',
+                            marginBottom: '16px',
+                        }}
+                    >
+                        All Generation totaling
+                    </Typography>
+                    <Typography 
+                        variant="h2" 
+                        style={{ 
+                            fontSize: '24px', 
+                            fontWeight: '300', 
+                            lineHeight: '36px', 
+                            color: '#42494D;', 
+                            textAlign: 'center',
+                            marginBottom: '70px',
+                        }}
+                    >
+                        {pagination.count} Pokemon
+                    </Typography>
+                    <Grid container spacing={10}>
                         {
-                            data && data.length && data.map((item, idx) => (
-                                <ListItem key={idx}>
-                                    <ListItemText>
-                                        {item.name} {item.weight}
-                                    </ListItemText>
-                                </ListItem>
+                            data && data.length && data.map((item) => (
+                                <Grid item key={item.id} xs={12} sm={6} md={4} style={{ paddingBottom: '24px', paddingTop: '24px' }}>
+                                    <Card variant="outlined" style={{ borderRadius: '24px' }}>
+                                        <CardContent style={{ padding: '40px 24px' }}>
+                                            <Box component={"div"} style={{ background: '#B3B6B8' }}>
+                                                <img src={item.sprites.front_default} height={"auto"} width={"100%"} />
+                                            </Box>
+                                            <Typography
+                                                variant="h6"
+                                                component="h6"
+                                                style={{ fontSize: '20px', fontWeight: '700', lineHeight: '20px', color: '#B3B6B8', textAlign: 'left', marginTop: '10px' }}
+                                            >
+                                                {`#${('0000' + item.id).slice(-4)}`}
+                                            </Typography>
+                                            <Typography
+                                                variant="h6"
+                                                component="h6"
+                                                style={{ 
+                                                    fontSize: '40px', 
+                                                    fontWeight: '700', 
+                                                    lineHeight: '60px', 
+                                                    color: '#42494D', 
+                                                    textAlign: 'left', 
+                                                    marginTop: '10px',
+                                                    overflow: 'hidden',
+                                                    whiteSpace: 'nowrap',
+                                                    textOverflow: 'ellipsis',
+                                                }}
+                                            >
+                                                {firstWordsToUpperCase(item.name)}
+                                            </Typography>
+                                            <Grid container>
+                                                <Grid item xs={6}>
+                                                    {
+                                                        item.types[0] && 
+                                                        <Button
+                                                            variant="contained"
+                                                            color="primary"
+                                                            style={{ 
+                                                                borderRadius: '25px', 
+                                                                padding: '12px 22px', 
+                                                                fontSize: '20px', 
+                                                                fontWeight: '700', 
+                                                                lineHeight: '10px', 
+                                                                color: '#fff' 
+                                                            }}
+                                                        >
+                                                            { item.types[0].type.name }
+                                                        </Button>
+                                                    }
+                                                </Grid>
+                                                <Grid item xs={6}>
+                                                    {
+                                                        item.types[1] && 
+                                                        <Button
+                                                            variant="contained"
+                                                            color="primary"
+                                                            style={{ 
+                                                                borderRadius: '25px', 
+                                                                padding: '12px 22px', 
+                                                                fontSize: '20px', 
+                                                                fontWeight: '700', 
+                                                                lineHeight: '10px', 
+                                                                color: '#fff' 
+                                                            }}
+                                                        >
+                                                            { item.types[1].type.name }
+                                                        </Button>
+                                                    }
+                                                </Grid>
+                                            </Grid>
+                                            <Grid container>
+                                                <Grid item xs={6}>
+                                                    {
+                                                        item.types[2] && 
+                                                        <Button
+                                                            variant="contained"
+                                                            color="primary"
+                                                            style={{ 
+                                                                borderRadius: '25px', 
+                                                                padding: '12px 22px', 
+                                                                fontSize: '20px', 
+                                                                fontWeight: '700', 
+                                                                lineHeight: '10px', 
+                                                                color: '#fff' 
+                                                            }}
+                                                        >
+                                                            { item.types[2].type.name }
+                                                        </Button>
+                                                    }
+                                                </Grid>
+                                                <Grid item xs={6}>
+                                                    {
+                                                        item.types[3] && 
+                                                        <Button
+                                                            variant="contained"
+                                                            color="primary"
+                                                            style={{ 
+                                                                borderRadius: '25px', 
+                                                                padding: '12px 22px', 
+                                                                fontSize: '20px', 
+                                                                fontWeight: '700', 
+                                                                lineHeight: '10px', 
+                                                                color: '#fff' 
+                                                            }}
+                                                        >
+                                                            { item.types[3].type.name }
+                                                        </Button>
+                                                    }
+                                                </Grid>
+                                            </Grid>
+                                        </CardContent>
+                                    </Card>
+                                </Grid>
                             ))
                         }
-                    </List>
-                    <Button
+                    </Grid>
+                    <Box component={'div'} style={{ margin: '80px 0', display: 'flex', justifyContent: 'space-between' }}>
+                        <Box component={'div'} style={{ margin: 'auto 0' }}>
+                            <Box component={'span'} style={{ fontSize: '20px', fontWeight: '700', lineHeight: '20px', marginRight: '16px', color: '#fff' }}>
+                                Per Page:
+                            </Box>
+                            <Box component={'span'}>
+                                <Select variant="outlined" input={<SelectInput />} value={perPage} onChange={handlePerPageChange}>
+                                    <MenuItem value={9}>9</MenuItem>
+                                    <MenuItem value={15}>15</MenuItem>
+                                    <MenuItem value={21}>21</MenuItem>
+                                </Select>
+                            </Box>
+                        </Box>
+                        <Box component={'div'}>
+                            <Pagination 
+                                size="large" 
+                                className={classes.root}
+                                count={Math.ceil(pagination.count / perPage)}
+                                page={page}
+                                variant={"outlined"} 
+                                shape="rounded" 
+                                showFirstButton 
+                                showLastButton
+                                onChange={handlePageChange}
+                            />
+                        </Box>
+                        <Box component={'div'} style={{ margin: 'auto 0', fontSize: '20px', fontWeight: '700', lineHeight: '20px', marginRight: '16px', color: '#fff' }}>
+                            Total Data: {pagination.count}
+                        </Box>
+                    </Box>
+                    
+                    {/* <Button
                         variant="contained"
                         color="primary"
                         // fullWidth
@@ -97,8 +418,7 @@ const PokemonList: FC = () => {
                             route.push(`/pokemon/detail/${1}`)
                         }
                     >
-                        {/* {t("home:requirement-action")} */}
-                        Pokemon Detail
+                        {t("home:requirement-action")}
                     </Button>
                     <Button
                         variant="contained"
@@ -115,7 +435,7 @@ const PokemonList: FC = () => {
                         onClick={() => fetchData('next')}
                     >
                         Next
-                    </Button>
+                    </Button> */}
                 </Box>
             </Box>
         </Container>
