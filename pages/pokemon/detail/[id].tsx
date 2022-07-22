@@ -22,7 +22,7 @@ const DetailPokemon: FC = () => {
         fetchData();
     }, []);
 
-    const fetchData = async (action = '') => {
+    const fetchData = async () => {
         setLoading(true);
 
         const URL = {
@@ -107,7 +107,7 @@ const DetailPokemon: FC = () => {
 
     const otherSprites = (urlImg) => {
         return <Grid item xs={12} sm={2} style={{ maxWidth: '141px', maxHeight: '141px' }}>
-            <Box component={"div"} style={{ background: '#B3B6B8', maxWidth: '141px', maxHeight: '141px' }}>
+            <Box component={"div"} style={{ background: '#B3B6B8', maxWidth: '141px', maxHeight: '141px', minHeight: '141px' }}>
                 {
                     urlImg && <img src={urlImg} height={"100%"} width={"100%"} style={{ objectFit: 'contain' }} />
                 }
@@ -118,7 +118,7 @@ const DetailPokemon: FC = () => {
                         style={{ 
                             background: '#B3B6B8', 
                             maxWidth: '141px',
-                            height: '141px', 
+                            minHeight: '141px', 
                             display: 'flex', 
                             flexDirection: 'column',
                             justifyContent: 'center', 
@@ -135,7 +135,12 @@ const DetailPokemon: FC = () => {
                 }
             </Box>
         </Grid>
-    }
+    };
+
+    const redirectToType = (type) => {
+        const url = type.type.url.split('/');
+        router.push(`/pokemon/type/${url[6]}`);
+    };
 
     return (
         <Container maxWidth="xl" style={{ backgroundColor: '#FAFAFA', padding: 0 }}>
@@ -144,7 +149,7 @@ const DetailPokemon: FC = () => {
             <Box component="div" p={10} style={{ backgroundColor: '#FFF' }}>
                 <Grid container spacing={4}>
                     <Grid item xs={12} sm={5}>
-                        <Box component={"div"} style={{ background: '#B3B6B8', width: '100%' }}>
+                        <Box component={"div"} style={{ background: '#B3B6B8', width: '100%', minHeight: '200px' }}>
                         {
                             data?.sprites?.front_default && <img src={data.sprites.front_default} height={"auto"} width={"100%"} />
                         }
@@ -156,7 +161,7 @@ const DetailPokemon: FC = () => {
                                     background: '#B3B6B8', 
                                     maxWidth: '268px', 
                                     maxHeight: '272px', 
-                                    height: '272px', 
+                                    minHeight: '200px', 
                                     display: 'flex', 
                                     flexDirection: 'column',
                                     justifyContent: 'center', 
@@ -329,7 +334,7 @@ const DetailPokemon: FC = () => {
                                                     textOverflow: 'ellipsis',
                                                     background: `${getTypeColor(type)}`,
                                                 }}
-                                                onClick={() => console.log('type: ', type)}
+                                                onClick={() => redirectToType(type)}
                                             >
                                                 { type.type.name }
                                             </Button>
@@ -444,8 +449,8 @@ const DetailPokemon: FC = () => {
                                                 style={{ 
                                                     border: `8px solid ${evolssColor[idx]}`, 
                                                     borderRadius: '50%', 
-                                                    // maxWidth: '155px', 
-                                                    // maxHeight: '155px', 
+                                                    maxWidth: '155px', 
+                                                    maxHeight: '155px', 
                                                     marginRight: '16px',
                                                     cursor: 'pointer',
                                                 }}
@@ -463,7 +468,7 @@ const DetailPokemon: FC = () => {
                                                 style={{ 
                                                     border: `8px solid ${evolssColor[idx]}`, 
                                                     maxWidth: '155px',
-                                                    height: '155px', 
+                                                    maxHeight: '155px', 
                                                     borderRadius: '50%',
                                                     display: 'flex', 
                                                     flexDirection: 'column',

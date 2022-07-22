@@ -1,8 +1,5 @@
 import React, { FC, useState, useEffect, useRef } from "react";
-import { useRouter } from "next/router";
-import { ROUTES_PATH } from "@constants/config";
 import useTranslation from "next-translate/useTranslation";
-import setLanguage from "next-translate/setLanguage";
 import { 
     Box, 
     Container, 
@@ -88,9 +85,6 @@ const PokemonList: FC = () => {
     const [open, setOpen] = useState(false);
 
     const { t } = useTranslation();
-    const router = useRouter();
-    const { locale } = router;
-    // setLanguage(locale);
     const pokeList = useRef(null);
     const classes = useStyles();
 
@@ -139,7 +133,7 @@ const PokemonList: FC = () => {
     };
 
     const handlePageChange = (e, p) => {
-        setPage(p, );
+        setPage(p);
     };
 
     const handlePerPageChange = (event) => {
@@ -182,7 +176,6 @@ const PokemonList: FC = () => {
                                     variant="h4"
                                     component="h3"
                                     className={classes.msFontSize}
-                                    // style={{ fontSize: '52px', fontWeight: '700', lineHeight: '70px', color: '#42494D', padding: '0 32px 0 0', textAlign: 'left' }}
                                 >
                                     {`All the Pokémon data you'll ever need in one place!`}
                                 </Typography>
@@ -289,7 +282,7 @@ const PokemonList: FC = () => {
                                 <Grid item key={item.id} xs={12} sm={6} md={4} style={{ paddingBottom: '24px', paddingTop: '24px' }}>
                                     <Card variant="outlined" onClick={() => handleClickOpen(item)} style={{ borderRadius: '24px', cursor: 'pointer' }}>
                                         <CardContent style={{ padding: '40px 24px' }}>
-                                            <Box component={"div"} style={{ background: '#B3B6B8' }}>
+                                            <Box component={"div"} style={{ background: '#B3B6B8', minHeight: '200px' }}>
                                                 {
                                                     item.sprites.front_default && <img src={item.sprites.front_default} height={"auto"} width={"100%"} />
                                                 }
@@ -301,7 +294,7 @@ const PokemonList: FC = () => {
                                                             background: '#B3B6B8', 
                                                             maxWidth: '268px',
                                                             maxHeight: '272px', 
-                                                            height: '272px', 
+                                                            minHeight: '200px',
                                                             display: 'flex', 
                                                             flexDirection: 'column',
                                                             justifyContent: 'center', 

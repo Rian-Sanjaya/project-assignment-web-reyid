@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import { Typography, Button, Grid, Box, Dialog, withStyles, makeStyles, useRadioGroup } from '@material-ui/core';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
-import MuiDialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import { firstWordsToUpperCase } from "@helpers/stringFunctions";
@@ -53,13 +52,6 @@ const DialogContent = withStyles((theme) => ({
   },
 }))(MuiDialogContent);
 
-const DialogActions = withStyles((theme) => ({
-  root: {
-    margin: 0,
-    padding: theme.spacing(1),
-  },
-}))(MuiDialogActions);
-
 const CustomizedDialogs: FC = ({ open, onHandleClose, pokemon }) => {
   const classes = useStyles();
   const router = useRouter();
@@ -80,7 +72,7 @@ const CustomizedDialogs: FC = ({ open, onHandleClose, pokemon }) => {
       <DialogContent>
         <Grid container spacing={4}>
           <Grid item xs={12} sm={5}>
-            <Box component={"div"} style={{ background: '#B3B6B8', width: '100%' }}>
+            <Box component={"div"} style={{ background: '#B3B6B8', width: '100%', minHeight: '200px' }}>
               {
                 pokemon?.sprites?.front_default && <img src={pokemon.sprites.front_default} height={"auto"} width={"100%"} />
               }
@@ -92,7 +84,7 @@ const CustomizedDialogs: FC = ({ open, onHandleClose, pokemon }) => {
                         background: '#B3B6B8', 
                         maxWidth: '268px', 
                         maxHeight: '272px', 
-                        height: '272px', 
+                        minHeight: '200px', 
                         display: 'flex', 
                         flexDirection: 'column',
                         justifyContent: 'center', 
@@ -264,6 +256,7 @@ const CustomizedDialogs: FC = ({ open, onHandleClose, pokemon }) => {
                             whiteSpace: 'nowrap',
                             textOverflow: 'ellipsis',
                             background: `${getTypeColor(type)}`,
+                            cursor: 'default',
                         }}
                       >
                         { type.type.name }

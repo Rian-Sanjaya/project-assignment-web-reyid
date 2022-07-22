@@ -1,16 +1,25 @@
 import React, { FC, useState } from 'react';
 import { Box, Select, MenuItem } from "@material-ui/core";
+import { useRouter } from "next/router";
+import { Language } from '@material-ui/icons';
 import setLanguage from "next-translate/setLanguage";
 
 const TopNavbar: FC = () => {
   const [lang, setLang] = useState('English');
+  const route = useRouter();
+  const { locale } = route;
 
-  const handleChange = (event) => {
+  const handleChange = async (event) => {
+    console.log('locale: ', locale);
+    await setLanguage(locale === "id" ? "en" : "id");
     setLang(event.target.value);
   };
 
   return (
     <Box component="div" pl={10} pr={10} mt={0} mb={0} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+      <Box component={"div"} style={{ marginRight: '4px' }}>
+        <Language style={{ fontSize: '18px', marginTop: '6px' }} />
+      </Box>
       <Select
         value={lang}
         onChange={handleChange}

@@ -14,7 +14,7 @@ const TopNavbar: FC = () => {
         </Link>
       </div>
       <div style={{ margin: 'auto 0', textAlign: 'center' }}>
-        <Link href="/pokemon/detail/1">
+        <Link href="/pokemon/type/1">
           <a style={{ textDecoration: 'none', fontSize: '16px', lineHeight: '24px', color: '#42494D' }}>Pokemon Type</a>
         </Link>
       </div>
