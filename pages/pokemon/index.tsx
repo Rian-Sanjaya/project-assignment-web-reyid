@@ -12,7 +12,8 @@ import {
     Card, 
     CardContent, 
     Select, 
-    MenuItem ,
+    MenuItem,
+    Hidden,
     makeStyles, 
     withStyles,
     InputBase,
@@ -22,6 +23,7 @@ import api from "@utils/api";
 // import Layout from "../../src/components/layouts/layout";
 import TopNavbar from "@components/layouts/TopNavbar";
 import Navbar from "@components/layouts/Navbar";
+import DetailDialog from "@components/home/detailDialog";
 import { firstWordsToUpperCase } from "@helpers/stringFunctions";
 
 const SelectInput = withStyles((theme) => ({
@@ -74,23 +76,23 @@ const paginationInit = {
     previous: '',
 };
 
+const typesColor = ['#E66D00', '#DE2C2C', '#01B956', '#E34C88', '#4350E6', '#FFAF66'];
+
 const PokemonList: FC = () => {
     const [data, setData] = useState(null);
+    const [currentData, setCurrentData] = useState(null);
     const [pagination, setPagination] = useState(paginationInit);
     const [isLoading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
     const [perPage, setPerPage] = useState(9);
+    const [open, setOpen] = useState(false);
 
     const { t } = useTranslation();
-    const route = useRouter();
-    const { locale } = route;
+    const router = useRouter();
+    const { locale } = router;
     // setLanguage(locale);
     const pokeList = useRef(null);
     const classes = useStyles();
-    
-    // useEffect(() => {
-    //     fetchData();
-    // }, []);
 
     useEffect(() => {
         fetchData();
@@ -132,7 +134,6 @@ const PokemonList: FC = () => {
             const pokemon = { ...arrResults[i], ...resData };
             results.push(pokemon);
         }
-        console.log('results: ', results);
         setData(results);
         setLoading(false);
     };
@@ -147,10 +148,30 @@ const PokemonList: FC = () => {
 
     const scrollToPokeList = () => pokeList.current.scrollIntoView({ behavior: 'smooth' });
 
+    const handleClickOpen = (curentData) => {
+        setCurrentData(curentData);
+        setOpen(true);
+    };
+    
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const getTypeColor = (type) => {
+        const url = type.type.url;
+        const arrUrl = url && url.split('/');
+        const num = arrUrl[6];
+        if (num <= 6) {
+            return typesColor[num - 1];
+        } 
+        return typesColor[5];
+    };
+
     return (
         <Container maxWidth="xl" style={{ backgroundColor: '#FAFAFA', padding: 0, height: '100%' }}>
             <TopNavbar />
             <Navbar />
+            <DetailDialog open={open} onHandleClose={handleClose} pokemon={currentData} />
             <Box component="div" style={{ backgroundColor: '#FFF', height: '100%' }}>
                 <Box component="div" pl={10} pr={10} style={{ height: `calc(100% - 100px)` }}>
                     <Grid container style={{ height: '100%' }}>
@@ -195,19 +216,21 @@ const PokemonList: FC = () => {
                                 </Box>
                             </Box>
                         </Grid>
-                        <Grid item xs={12} sm={6} style={{ alignItems: 'center', justifyContent: 'center' }}>
-                            <Box component="div" position={"relative"} height={"100%"}>
-                                <Box component="div" position={"absolute"} top={"12%"} left={"4%"} zIndex={1}>
-                                    <img src="/images/poke1_home.png" style={{ width: '100%', height: 'auto' }} />
+                        <Hidden xsDown>
+                            <Grid item xs={12} sm={6} style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                <Box component="div" position={"relative"} height={"100%"}>
+                                    <Box component="div" position={"absolute"} top={"12%"} left={"4%"} zIndex={1}>
+                                        <img src="/images/poke1_home.png" style={{ width: '100%', height: 'auto' }} />
+                                    </Box>
+                                    <Box component="div" position={"absolute"} top={"24%"} left={"20%"} zIndex={2}>
+                                        <img src="/images/poke2_home.png" style={{ width: '100%', height: 'auto' }} />
+                                    </Box>
+                                    <Box component="div" position={"absolute"} top={"40%"} left={"32%"} zIndex={3}>
+                                        <img src="/images/poke3_home.png" style={{ width: '100%', height: 'auto' }} />
+                                    </Box>
                                 </Box>
-                                <Box component="div" position={"absolute"} top={"24%"} left={"20%"} zIndex={2}>
-                                    <img src="/images/poke2_home.png" style={{ width: '100%', height: 'auto' }} />
-                                </Box>
-                                <Box component="div" position={"absolute"} top={"40%"} left={"32%"} zIndex={3}>
-                                    <img src="/images/poke3_home.png" style={{ width: '100%', height: 'auto' }} />
-                                </Box>
-                            </Box>
-                        </Grid>
+                            </Grid>
+                        </Hidden>
                     </Grid>
                 </Box>
                 <Box 
@@ -240,7 +263,7 @@ const PokemonList: FC = () => {
                             fontSize: '24px', 
                             fontWeight: '300', 
                             lineHeight: '36px', 
-                            color: '#42494D;', 
+                            color: '#42494D', 
                             textAlign: 'center',
                             marginBottom: '16px',
                         }}
@@ -253,7 +276,7 @@ const PokemonList: FC = () => {
                             fontSize: '24px', 
                             fontWeight: '300', 
                             lineHeight: '36px', 
-                            color: '#42494D;', 
+                            color: '#42494D', 
                             textAlign: 'center',
                             marginBottom: '70px',
                         }}
@@ -264,10 +287,35 @@ const PokemonList: FC = () => {
                         {
                             data && data.length && data.map((item) => (
                                 <Grid item key={item.id} xs={12} sm={6} md={4} style={{ paddingBottom: '24px', paddingTop: '24px' }}>
-                                    <Card variant="outlined" style={{ borderRadius: '24px' }}>
+                                    <Card variant="outlined" onClick={() => handleClickOpen(item)} style={{ borderRadius: '24px', cursor: 'pointer' }}>
                                         <CardContent style={{ padding: '40px 24px' }}>
                                             <Box component={"div"} style={{ background: '#B3B6B8' }}>
-                                                <img src={item.sprites.front_default} height={"auto"} width={"100%"} />
+                                                {
+                                                    item.sprites.front_default && <img src={item.sprites.front_default} height={"auto"} width={"100%"} />
+                                                }
+                                                {
+                                                    !(item.sprites?.front_default) && 
+                                                    <Box 
+                                                        component={"div"} 
+                                                        style={{ 
+                                                            background: '#B3B6B8', 
+                                                            maxWidth: '268px',
+                                                            maxHeight: '272px', 
+                                                            height: '272px', 
+                                                            display: 'flex', 
+                                                            flexDirection: 'column',
+                                                            justifyContent: 'center', 
+                                                            alignItems: 'center',
+                                                            fontSize: '20px',
+                                                            fontWeight: '400',
+                                                            lineHeight: '30px',
+                                                            color: '#fff',
+                                                        }}
+                                                    >
+                                                        <span>Pokemon Picture</span>
+                                                        <span>Placeholder</span>
+                                                    </Box>
+                                                }
                                             </Box>
                                             <Typography
                                                 variant="h6"
@@ -293,85 +341,28 @@ const PokemonList: FC = () => {
                                             >
                                                 {firstWordsToUpperCase(item.name)}
                                             </Typography>
-                                            <Grid container>
-                                                <Grid item xs={6}>
-                                                    {
-                                                        item.types[0] && 
+                                            <Grid container spacing={1}>
+                                                {
+                                                    item?.types.slice(0, 3).map((type, idx) => (
+                                                        <Grid item xs={12} sm={6} key={idx} style={{ maxWidth: '136px' }}>
                                                         <Button
                                                             variant="contained"
-                                                            color="primary"
                                                             style={{ 
                                                                 borderRadius: '25px', 
-                                                                padding: '12px 22px', 
+                                                                padding: '12px 0', 
                                                                 fontSize: '20px', 
                                                                 fontWeight: '700', 
-                                                                lineHeight: '10px', 
-                                                                color: '#fff' 
+                                                                lineHeight: '18px', 
+                                                                color: '#fff',
+                                                                width: '125px',
+                                                                background: `${getTypeColor(type)}`,
                                                             }}
                                                         >
-                                                            { item.types[0].type.name }
+                                                            { type.type.name }
                                                         </Button>
-                                                    }
-                                                </Grid>
-                                                <Grid item xs={6}>
-                                                    {
-                                                        item.types[1] && 
-                                                        <Button
-                                                            variant="contained"
-                                                            color="primary"
-                                                            style={{ 
-                                                                borderRadius: '25px', 
-                                                                padding: '12px 22px', 
-                                                                fontSize: '20px', 
-                                                                fontWeight: '700', 
-                                                                lineHeight: '10px', 
-                                                                color: '#fff' 
-                                                            }}
-                                                        >
-                                                            { item.types[1].type.name }
-                                                        </Button>
-                                                    }
-                                                </Grid>
-                                            </Grid>
-                                            <Grid container>
-                                                <Grid item xs={6}>
-                                                    {
-                                                        item.types[2] && 
-                                                        <Button
-                                                            variant="contained"
-                                                            color="primary"
-                                                            style={{ 
-                                                                borderRadius: '25px', 
-                                                                padding: '12px 22px', 
-                                                                fontSize: '20px', 
-                                                                fontWeight: '700', 
-                                                                lineHeight: '10px', 
-                                                                color: '#fff' 
-                                                            }}
-                                                        >
-                                                            { item.types[2].type.name }
-                                                        </Button>
-                                                    }
-                                                </Grid>
-                                                <Grid item xs={6}>
-                                                    {
-                                                        item.types[3] && 
-                                                        <Button
-                                                            variant="contained"
-                                                            color="primary"
-                                                            style={{ 
-                                                                borderRadius: '25px', 
-                                                                padding: '12px 22px', 
-                                                                fontSize: '20px', 
-                                                                fontWeight: '700', 
-                                                                lineHeight: '10px', 
-                                                                color: '#fff' 
-                                                            }}
-                                                        >
-                                                            { item.types[3].type.name }
-                                                        </Button>
-                                                    }
-                                                </Grid>
+                                                        </Grid>
+                                                    ))
+                                                }
                                             </Grid>
                                         </CardContent>
                                     </Card>
@@ -409,33 +400,6 @@ const PokemonList: FC = () => {
                             Total Data: {pagination.count}
                         </Box>
                     </Box>
-                    
-                    {/* <Button
-                        variant="contained"
-                        color="primary"
-                        // fullWidth
-                        onClick={() =>
-                            route.push(`/pokemon/detail/${1}`)
-                        }
-                    >
-                        {t("home:requirement-action")}
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        // fullWidth
-                        onClick={() => fetchData('prev')}
-                    >
-                        Prev
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        // fullWidth
-                        onClick={() => fetchData('next')}
-                    >
-                        Next
-                    </Button> */}
                 </Box>
             </Box>
         </Container>

@@ -10,7 +10,7 @@ const TopNavbar: FC = () => {
       </div>
       <div style={{ margin: 'auto 0', textAlign: 'center', marginRight: '40px' }}>
         <Link href="/pokemon">
-          <a style={{ textDecoration: 'none', fontSize: '16px', lineHeight: '24px', color: '#E6AB09' }}>Home</a>
+          <a style={{ textDecoration: 'none', fontSize: '16px', lineHeight: '24px', color: '#42494D' }}>Home</a>
         </Link>
       </div>
       <div style={{ margin: 'auto 0', textAlign: 'center' }}>
