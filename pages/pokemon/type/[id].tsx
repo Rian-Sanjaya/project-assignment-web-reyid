@@ -275,10 +275,10 @@ const TypePokemon = () => {
                             }
                           </Box>
                         </TableCell>
-                        <TableCell align="center" style={{ color: '#42494D', fontSize: '20px', fontWeight: '700', lineWeight: '15px' }}>
-                        {`#${('0000' + item.id).slice(-4)}`}
+                        <TableCell align="center" style={{ color: '#42494D', fontSize: '20px', fontWeight: '700', lineHeight: '15px' }}>
+                          {`#${('0000' + item.id).slice(-4)}`}
                         </TableCell>
-                        <TableCell align="center" style={{ color: '#42494D', fontSize: '20px', fontWeight: '700', lineWeight: '15px' }}>
+                        <TableCell align="center" style={{ color: '#42494D', fontSize: '20px', fontWeight: '700', lineHeight: '15px' }}>
                           {firstWordsToUpperCase(item.name)}
                         </TableCell>
                         <TableCell align="left">

@@ -7,7 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import { firstWordsToUpperCase } from "@helpers/stringFunctions";
 
-const styles = (theme) => ({
+const styles: any = (theme) => ({
   root: {
     margin: 0,
     padding: theme.spacing(3),
@@ -32,8 +32,8 @@ const useStyles = makeStyles((theme) => ({
 
 const typesColor = ['#E66D00', '#DE2C2C', '#01B956', '#E34C88', '#4350E6', '#FFAF66'];
 
-const DialogTitle = withStyles(styles)((props) => {
-  const { children, classes, onClose, ...other } = props;
+const DialogTitle: any = withStyles(styles)((props) => {
+  const { children, classes, onClose, ...other }: any = props;
   return (
     <MuiDialogTitle disableTypography className={classes.root} {...other}>
       <Typography variant="h6">{children}</Typography>
@@ -52,7 +52,7 @@ const DialogContent = withStyles((theme) => ({
   },
 }))(MuiDialogContent);
 
-const CustomizedDialogs: FC = ({ open, onHandleClose, pokemon }) => {
+const CustomizedDialogs: FC<any> = ({ opendialog, onHandleClose, pokemon }: {opendialog: boolean, onHandleClose: () => {}, pokemon: any}) => {
   const classes = useStyles();
   const router = useRouter();
 
@@ -67,7 +67,7 @@ const CustomizedDialogs: FC = ({ open, onHandleClose, pokemon }) => {
   };
 
   return (
-    <Dialog className={classes.root} onClose={onHandleClose} aria-labelledby="customized-dialog-title" open={open}>
+    <Dialog className={classes.root} onClose={onHandleClose} aria-labelledby="customized-dialog-title" open={opendialog}>
       <DialogTitle id="customized-dialog-title" onClose={onHandleClose} />
       <DialogContent>
         <Grid container spacing={4}>

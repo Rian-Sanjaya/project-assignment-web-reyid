@@ -165,7 +165,7 @@ const PokemonList: FC = () => {
         <Container maxWidth="xl" style={{ backgroundColor: '#FAFAFA', padding: 0, height: '100%' }}>
             <TopNavbar />
             <Navbar />
-            <DetailDialog open={open} onHandleClose={handleClose} pokemon={currentData} />
+            <DetailDialog opendialog={open} onHandleClose={handleClose} pokemon={currentData} />
             <Box component="div" style={{ backgroundColor: '#FFF', height: '100%' }}>
                 <Box component="div" pl={10} pr={10} style={{ height: `calc(100% - 100px)` }}>
                     <Grid container style={{ height: '100%' }}>
@@ -229,13 +229,14 @@ const PokemonList: FC = () => {
                 <Box 
                     component="div" 
                     pl={10} pr={10} 
-                    ref={pokeList}
+                    // ref={pokeList}
                     style={{ 
                         backgroundImage: 'url(/images/background_content.png)', 
                         backgroundSize: 'cover', 
                         border: '1px solid transparent' 
                     }}
                 >
+                    <div ref={pokeList}>
                      <Typography 
                         variant="h2" 
                         style={{ 
@@ -393,6 +394,7 @@ const PokemonList: FC = () => {
                             Total Data: {pagination.count}
                         </Box>
                     </Box>
+                    </div>
                 </Box>
             </Box>
         </Container>
