@@ -6,7 +6,7 @@
 
 **The Pokemon Homepage path is "/pokemon".**
 
-**I haven't inplement a loading indicator when fetching data from api. Please wait for a while when accessing the pokemon detail page, it sometimes take a while to load.**
+**I have not implement a loading indicator when fetching data from api. Please wait for a while when accessing the pokemon detail page, it sometimes take a while to load.**
 
 ### To run in local
 
