@@ -177,7 +177,7 @@ const PokemonList: FC = () => {
                                     component="h3"
                                     className={classes.msFontSize}
                                 >
-                                    {`All the Pokémon data you'll ever need in one place!`}
+                                    {t("home:home-title")}
                                 </Typography>
                                 <Typography
                                     align="center"
@@ -185,7 +185,7 @@ const PokemonList: FC = () => {
                                     component="h6"
                                     style={{ fontSize: '20px', fontWeight: '400', lineHeight: '30px', color: '#7B8082', textAlign: 'left', marginTop: '32px' }}
                                 >
-                                    {`Thousands of data compiled into one place`}
+                                    {t("home:home-subtitle")}
                                 </Typography>
                                 <Box component="div" textAlign={"left"} mt={4}>
                                     <Button
@@ -204,7 +204,7 @@ const PokemonList: FC = () => {
                                         }}
                                         onClick={scrollToPokeList}
                                     >
-                                        Check PokèDex
+                                        {t("home:home-check-button")}
                                     </Button>
                                 </Box>
                             </Box>
@@ -262,7 +262,7 @@ const PokemonList: FC = () => {
                             marginBottom: '16px',
                         }}
                     >
-                        All Generation totaling
+                        {t("home:home-pokedex-title")}
                     </Typography>
                     <Typography 
                         variant="h2" 
@@ -367,7 +367,7 @@ const PokemonList: FC = () => {
                     <Box component={'div'} style={{ margin: '80px 0', display: 'flex', justifyContent: 'space-between' }}>
                         <Box component={'div'} style={{ margin: 'auto 0' }}>
                             <Box component={'span'} style={{ fontSize: '20px', fontWeight: '700', lineHeight: '20px', marginRight: '16px', color: '#fff' }}>
-                                Per Page:
+                                {t("home:home-per-page")}
                             </Box>
                             <Box component={'span'}>
                                 <Select variant="outlined" input={<SelectInput />} value={perPage} onChange={handlePerPageChange}>
@@ -391,7 +391,7 @@ const PokemonList: FC = () => {
                             />
                         </Box>
                         <Box component={'div'} style={{ margin: 'auto 0', fontSize: '20px', fontWeight: '700', lineHeight: '20px', marginRight: '16px', color: '#fff' }}>
-                            Total Data: {pagination.count}
+                            {t("home:home-totaldata")} {pagination.count}
                         </Box>
                     </Box>
                     </div>

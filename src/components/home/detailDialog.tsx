@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import { useRouter } from "next/router";
+import useTranslation from "next-translate/useTranslation";
 import { Typography, Button, Grid, Box, Dialog, withStyles, makeStyles, useRadioGroup } from '@material-ui/core';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
@@ -55,6 +56,7 @@ const DialogContent = withStyles((theme) => ({
 const CustomizedDialogs: FC<any> = ({ opendialog, onHandleClose, pokemon }: {opendialog: boolean, onHandleClose: () => {}, pokemon: any}) => {
   const classes = useStyles();
   const router = useRouter();
+  const { t } = useTranslation();
 
   const getTypeColor = (type) => {
     const url = type.type.url;
@@ -283,7 +285,7 @@ const CustomizedDialogs: FC<any> = ({ opendialog, onHandleClose, pokemon }: {ope
                 }}
                 onClick={() => router.push(`/pokemon/detail/${pokemon.id}`)}
               >
-                More Detail
+                {t("home:dialog-more")}
               </Button>
             </Box>
           </Grid>

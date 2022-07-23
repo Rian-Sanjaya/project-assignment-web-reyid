@@ -1,9 +1,10 @@
 module.exports = {
     locales: ["id", "en"],
-    defaultLocale: "id",
+    defaultLocale: "en",
     localeDetection: false,
     pages: {
         "*": ["common"],
         "/": ["home"],
+        "/pokemon": ["home"],
     },
 };

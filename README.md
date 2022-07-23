@@ -1,3 +1,30 @@
+## To see  the project live
+
+[Pokemon Assignment Live Page](https://project-assignment-web-reyid-omuwxjvvy-riansj.vercel.app/pokemon/)
+
+**I do not change the root path, it still go to welcome page created by Reyid assignee author. Clicking the Start button will direct to the Pokemon Homepage**
+
+**The Pokemon Homepage path is "/pokemon".**
+
+### To run in local
+
+**Install package.**
+
+```bash
+$ yarn install
+```
+**Running the development server:**
+
+```bash
+$ yarn dev
+```
+
+## Looking Forward to know the assignment result
+
+## Thank You. Have a great days ahead.
+
+---
+
 ## Requirements
 
 Make sure you have installed these tools on your machine.

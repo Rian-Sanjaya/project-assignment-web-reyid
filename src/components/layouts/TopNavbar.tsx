@@ -10,7 +10,6 @@ const TopNavbar: FC = () => {
   const { locale } = route;
 
   const handleChange = async (event) => {
-    console.log('locale: ', locale);
     await setLanguage(locale === "id" ? "en" : "id");
     setLang(event.target.value);
   };
