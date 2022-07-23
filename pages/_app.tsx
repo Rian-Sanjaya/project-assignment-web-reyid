@@ -7,8 +7,9 @@ import "@styles/global.css";
 import "@styles/vars.css";
 
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {
+    const MComponent: any = Component;
     return (
-        <Component {...pageProps} />
+        <MComponent {...pageProps} />
     );
 }
 

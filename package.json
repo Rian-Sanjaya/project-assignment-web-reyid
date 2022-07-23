@@ -71,5 +71,8 @@
         "*.{js,jsx,ts,tsx}": [
             "npm run lint -- --quiet --fix"
         ]
+    },
+    "resolutions": {
+    "@types/react": "17.0.38"
     }
 }
