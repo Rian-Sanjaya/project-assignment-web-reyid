@@ -1,6 +1,6 @@
 ## To see  the project live
 
-[Pokemon Assignment Live Page](https://project-assignment-web-reyid-omuwxjvvy-riansj.vercel.app/pokemon/)
+[Pokemon Assignment Live Page](https://project-assignment-web-reyid-3rqedmbh7-riansj.vercel.app/pokemon/)
 
 **I do not change the root path, it still go to welcome page created by Reyid assignee author. Clicking the Start button will direct to the Pokemon Homepage**
 
@@ -19,7 +19,7 @@ $ yarn install
 $ yarn dev
 ```
 
-## Looking Forward to know the assignment result
+## Looking Forward to know the assignment score and result.
 
 ## Thank You. Have a great days ahead.
 
